@@ -1,60 +1,64 @@
-import React ,{useId} from 'react';
+import React, { useId } from "react";
 
-function InputBox({ // variable inputs
-    label,
-    amount, 
-    onAmountChange,
-    onCurrencyChange,
-    currencyOptions= [],
-    selectCurrency="usd", 
-    amountDisable=false,
-    currencyDisable=false,
-
-    
-    className = "",
+function InputBox({
+  label,
+  amount,
+  onAmountChange,
+  onCurrencyChange,
+  currencyOptions = [],
+  selectCurrency = "usd",
+  amountDisable = false,
+  currencyDisable = false,
+  className = "",
 }) {
+  const amountInputId = useId();
 
-    const amountInputId= useId()
-   
+  return (
+    <div
+      className={`bg-white/30 p-4 rounded-xl shadow-inner flex justify-between items-center ${className}`}
+    >
+      <div className="w-1/2">
+        <label
+          htmlFor={amountInputId}
+          className="text-black/70 text-sm mb-1 block"
+        >
+          {label}
+        </label>
+        <input
+          id={amountInputId}
+           className="outline-none w-full bg-white/80 py-2 px-2 text-lg font-semibold text-gray-900 rounded-md placeholder-gray-500"
+          type="number"
+          placeholder="0"
+          disabled={amountDisable}
+          value={amount === 0 ? "" : amount}
+          onChange={(e) =>
+            onAmountChange &&
+            onAmountChange(
+              Number(e.target.value.replace(/^0+(?=\d)/, "")) // remove leading 0s
+            )
+          }
+        />
+      </div>
 
-    return (
-        <div className={`bg-white p-3 rounded-lg text-sm flex ${className}`}>
-            <div className="w-1/2">
-                <label htmlFor={amountInputId} className="text-black/40 mb-2 inline-block">
-                    {label}
-                </label>
-                <input
-                    id={amountInputId}
-                    className="outline-none w-full bg-transparent py-1.5"
-                    type="number"
-                    placeholder="Amount"
-                    disabled={amountDisable}
-                    value={amount}
-                    onChange={ (e) => onAmountChange && onAmountChange(Number(e.target.value))} // firstly checks using and , amount chnage exists aur not 
-                />
-            </div>
-            <div className="w-1/2 flex flex-wrap justify-end text-right">
-                <p className="text-black/40 mb-2 w-full">Currency Type</p>
-                <select
-                    className="rounded-lg px-1 py-1 bg-gray-100 cursor-pointer outline-none"
-                    value={selectCurrency}
-                    onChange ={ (e) => onCurrencyChange && onCurrencyChange(e.target.value)}
-                    disabled={currencyDisable}
-                    
-                >
-
-                    {currencyOptions.map( (curr) =>(// remember to use the key in react for performance 
-                        <option key={curr} value={curr}>
-                            {curr}
-                        </option>
-                    ) )}
-                    
-                        
-                
-                </select>
-            </div>
-        </div>
-    );
+      <div className="w-1/2 text-right">
+        <p className="text-black/70 text-sm mb-1">Currency</p>
+        <select
+          className="rounded-md px-3 py-2 bg-white/90 shadow-md cursor-pointer outline-none font-semibold text-gray-800"
+          value={selectCurrency}
+          onChange={(e) =>
+            onCurrencyChange && onCurrencyChange(e.target.value)
+          }
+          disabled={currencyDisable}
+        >
+          {currencyOptions.map((curr) => (
+            <option key={curr} value={curr}>
+              {curr.toUpperCase()}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
 }
 
 export default InputBox;
